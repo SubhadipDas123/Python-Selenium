@@ -1,0 +1,86 @@
+from selenium import webdriver
+import time
+import pandas as pd
+
+
+browser = webdriver.Chrome()
+browser.get("https://www.tiaa.org/public/investment-performance?planid=100111")
+time.sleep(25)
+
+
+tables = browser.find_elements_by_class_name("m_centered")
+print(len(tables))
+
+#find data for mutual funds and variable annuities and store as csv
+table1 = tables[0]
+
+names = [x.text for x in table1.find_elements_by_xpath("//td[1]/a")]
+#print([x.text for x in table1.find_elements_by_xpath(".//td[2]")])
+assets = [x.text for x in table1.find_elements_by_xpath(".//td[2]")]
+
+products = [x.text for x in table1.find_elements_by_xpath(".//td[5]")]
+expratios = [x.text for x in table1.find_elements_by_xpath(".//td[6]")]
+returns = [x.text for x in table1.find_elements_by_xpath(".//td[7]")]
+oneyr = [x.text for x in table1.find_elements_by_xpath('.//td[8]/span[2]')]
+threeyr = [x.text for x in table1.find_elements_by_xpath('.//td[9]/span[2]')]
+fiveyr = [x.text for x in table1.find_elements_by_xpath('.//td[10]/span[2]')]
+tenyr = [x.text for x in table1.find_elements_by_xpath('.//td[11]/span[2]')]
+since_inception = [x.text for x in table1.find_elements_by_xpath('.//td[12]/span[2]')]
+
+
+df = pd.DataFrame()
+df['name'] = names
+df['asset class'] = pd.Series(assets)
+
+df['product type'] = pd.Series(products)
+df['expense ratio'] = pd.Series(expratios)
+df['return'] = pd.Series(returns)
+df['one year'] = pd.Series(oneyr)
+df['three year'] = pd.Series(threeyr)
+df['five year'] = pd.Series(fiveyr)
+df['ten year'] = pd.Series(tenyr)
+df['since inception'] = pd.Series(since_inception)
+
+df.to_csv("data3.csv")
+
+
+#find data for fixed investments
+
+table2 = tables[1]
+
+names = [x.text for x in table2.find_elements_by_xpath("//td[2]/a")]
+assets = [x.text for x in table2.find_elements_by_xpath(".//td[3]")]
+
+
+products = [x.text for x in table2.find_elements_by_xpath(".//td[4]")]
+expratios = [x.text for x in table2.find_elements_by_xpath(".//td[5]")]
+returns = [x.text for x in table2.find_elements_by_xpath(".//td[6]")]
+oneyr = [x.text for x in table2.find_elements_by_xpath('.//td[7]/span[2]')]
+threeyr = [x.text for x in table2.find_elements_by_xpath('.//td[8]/span[2]')]
+fiveyr = [x.text for x in table2.find_elements_by_xpath('.//td[9]/span[2]')]
+tenyr = [x.text for x in table2.find_elements_by_xpath('.//td[10]/span[2]')]
+
+df = pd.DataFrame()
+df['name'] = names
+df['asset class'] = pd.Series(assets)
+
+df['product type'] = pd.Series(products)
+df['expense ratio'] = pd.Series(expratios)
+df['return'] = pd.Series(returns)
+df['one year'] = pd.Series(oneyr)
+df['three year'] = pd.Series(threeyr)
+df['five year'] = pd.Series(fiveyr)
+df['ten year'] = pd.Series(tenyr)
+#df['since inception'] = pd.Series(since_inception)
+
+df.to_csv("C:\\Users\\subha\\Desktop\\garbage\\Plootus\\Data_Output\\Data.csv")
+
+browser.close()
+
+
+
+
+
+
+
+
